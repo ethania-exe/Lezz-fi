@@ -1,4 +1,6 @@
+_________________________________
 # Popular Site: Lezz-fi
-# *Chat | And msg Sharing.
+_________________________________
+# *Chat And msg Sharing web app.
 __________________________________
-SP Group:《《 R E X | G.P.D.X | P-1508  》》
+#SP Group:《《 R E X | G.P.D.X | P-1508  》》
