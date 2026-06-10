@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Firebase Chat Login System</title>
+  <style>
+    body { font-family: Arial; background:#f2f2f2; }
+    .box { width:300px; margin:20px auto; padding:20px; background:#fff; border-radius:10px; }
+    input, button { width:100%; padding:10px; margin:5px 0; }
+    #chat { width:300px; margin:20px auto; background:#fff; padding:10px; border-radius:10px; }
+    .msg { padding:5px; border-bottom:1px solid #ddd; }
+  </style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div class="box" id="loginBox">
+  <h3>Login / Signup</h3>
+  <input id="name" placeholder="Your Name">
+  <input id="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+  <button onclick="signup()">Signup</button>
+  <button onclick="login()">Login</button>
+</div>
+
+<!-- CHAT -->
+<div id="chatBox" style="display:none;">
+  <div class="box">
+    <h3 id="userInfo"></h3>
+    <input id="message" placeholder="Message">
+    <button onclick="sendMsg()">Send</button>
+  </div>
+
+  <div id="chat"></div>
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+import {
+  getDatabase,
+  ref,
+  push,
+  onChildAdded,
+  set
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
+  projectId: "YOUR_PROJECT",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "XXXX",
+  appId: "XXXX"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
+
+let currentUser = null;
+
+/* SIGNUP */
+window.signup = function(){
+  let email = document.getElementById("email").value;
+  let pass = document.getElementById("password").value;
+  let name = document.getElementById("name").value;
+
+  createUserWithEmailAndPassword(auth, email, pass)
+  .then((userCredential) => {
+    currentUser = userCredential.user;
+
+    set(ref(db,"users/"+currentUser.uid),{
+      name:name,
+      email:email
+    });
+
+    alert("Signup success!");
+  })
+  .catch(err => alert(err.message));
+}
+
+/* LOGIN */
+window.login = function(){
+  let email = document.getElementById("email").value;
+  let pass = document.getElementById("password").value;
+
+  signInWithEmailAndPassword(auth, email, pass)
+  .then((userCredential)=>{
+    currentUser = userCredential.user;
+    alert("Login success!");
+  })
+  .catch(err => alert(err.message));
+}
+
+/* AUTH STATE */
+onAuthStateChanged(auth, (user)=>{
+  if(user){
+    document.getElementById("loginBox").style.display="none";
+    document.getElementById("chatBox").style.display="block";
+
+    currentUser = user;
+
+    document.getElementById("userInfo").innerText = "Welcome " + user.email;
+  }
+});
+
+/* SEND MESSAGE */
+window.sendMsg = function(){
+  let msg = document.getElementById("message").value;
+  if(!msg) return;
+
+  push(ref(db,"messages"),{
+    name: currentUser.email,
+    message: msg
+  });
+
+  document.getElementById("message").value="";
+}
+
+/* LOAD CHAT */
+onChildAdded(ref(db,"messages"),(data)=>{
+  let m = data.val();
+
+  document.getElementById("chat").innerHTML +=
+  `<div class="msg"><b>${m.name}</b><br>${m.message}</div>`;
+});
+
+</script>
+
+</body>
+</html>
