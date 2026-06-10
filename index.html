@@ -2,109 +2,127 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Lezz-Fi Chat</title>
 
 <style>
 body{
-margin:0;
 font-family:Arial;
 background:#0f172a;
 color:white;
+margin:0;
+}
+
+h1{
 text-align:center;
+padding:15px;
 }
 
-.header{
-padding:20px;
-background:#111827;
-font-size:28px;
-font-weight:bold;
+#chat{
+height:65vh;
+overflow:auto;
+padding:10px;
 }
 
-.online{
-color:#00ff88;
-}
-
-.chat-box{
-width:90%;
-max-width:600px;
-height:350px;
-margin:20px auto;
+.msg{
 background:#1e293b;
-border-radius:10px;
-padding:10px;
-overflow-y:auto;
-text-align:left;
-}
-
-.message{
-background:#334155;
-padding:10px;
 margin:8px;
+padding:10px;
 border-radius:10px;
 }
 
-.input-area{
-width:90%;
-max-width:600px;
-margin:auto;
+.bottom{
 display:flex;
-gap:10px;
+padding:10px;
+gap:5px;
 }
 
 input{
-flex:1;
 padding:12px;
 border:none;
-border-radius:10px;
+border-radius:8px;
+}
+
+#name{
+width:90px;
+}
+
+#message{
+flex:1;
 }
 
 button{
-padding:12px 20px;
+padding:12px;
 border:none;
-border-radius:10px;
-background:#00ff88;
-font-weight:bold;
+border-radius:8px;
 cursor:pointer;
-}
-
-.footer{
-margin-top:20px;
-padding:10px;
-opacity:.7;
 }
 </style>
 
 </head>
-
 <body>
 
-<div class="header">
-🔥 LEZZ-FI CHAT 🔥
-<br>
-<span class="online">● ONLINE</span>
+<h1>🔥 Lezz-Fi Chat 🔥</h1>
+
+<div id="chat"></div>
+
+<div class="bottom">
+<input id="name" placeholder="Name">
+<input id="message" placeholder="Message">
+<button onclick="sendMsg()">Send</button>
 </div>
 
-<div class="chat-box">
+<script type="module">
 
-<div class="message">
-🤖 Welcome to Lezz-Fi Chat
-</div>
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-<div class="message">
-👋 Firebase connect korle real chat kaj korbe
-</div>
+import {
+getDatabase,
+ref,
+push,
+onChildAdded
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-</div>
+const firebaseConfig = {
+  apiKey: "AIzaSyDN_rycfVW0HrqAlIIHfWVqumhAPQfetLs",
+  authDomain: "lezz-fi.firebaseapp.com",
+  databaseURL: "https://lezz-fi-default-rtdb.firebaseio.com",
+  projectId: "lezz-fi",
+  storageBucket: "lezz-fi.firebasestorage.app",
+  messagingSenderId: "156046703842",
+  appId: "1:156046703842:web:482610a2c1180dadffb2bb",
+  measurementId: "G-F62GEFZ0JV"
+};
 
-<div class="input-area">
-<input placeholder="Type message...">
-<button>Send</button>
-</div>
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-<div class="footer">
-Made by Mahin.😎
-</div>
+window.sendMsg = function(){
+
+const name=document.getElementById("name").value;
+const message=document.getElementById("message").value;
+
+if(!name || !message) return;
+
+push(ref(db,"messages"),{
+name,
+message
+});
+
+document.getElementById("message").value="";
+}
+
+onChildAdded(ref(db,"messages"),(data)=>{
+
+const m=data.val();
+
+document.getElementById("chat").innerHTML +=
+`<div class="msg"><b>${m.name}</b><br>${m.message}</div>`;
+
+});
+
+</script>
 
 </body>
 </html>
