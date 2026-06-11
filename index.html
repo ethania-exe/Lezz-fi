@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Lezz-Fi</title>
-
+<p>|MADE BY MAHIN<>
 <style>
 body{
 margin:0;
@@ -114,7 +114,11 @@ cursor:pointer;
 
 <div id="chatPage">
 <header>Lezz-Fi </header>
-
+  
+<button onclick="logout()" style="margin:10px;">
+Logout
+</button>
+  
 <div id="chat"></div>
 
 <div id="bottom">
@@ -228,7 +232,14 @@ document.getElementById("chat")
 .scrollHeight;
 
 });
+window.logout = function(){
 
+localStorage.removeItem("lezzfi_name");
+localStorage.removeItem("lezzfi_avatar");
+
+location.reload();
+
+}
 </script>
 
 </body>
