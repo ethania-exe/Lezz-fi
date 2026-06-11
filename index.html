@@ -3,126 +3,66 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Lezz-Fi Chat</title>
-
+<title>Lezz‑Fi Chat v2.0</title>
 <style>
-body{
-font-family:Arial;
-background:#0f172a;
-color:white;
-margin:0;
-}
-
-h1{
-text-align:center;
-padding:15px;
-}
-
-#chat{
-height:65vh;
-overflow:auto;
-padding:10px;
-}
-
-.msg{
-background:#1e293b;
-margin:8px;
-padding:10px;
-border-radius:10px;
-}
-
-.bottom{
-display:flex;
-padding:10px;
-gap:5px;
-}
-
-input{
-padding:12px;
-border:none;
-border-radius:8px;
-}
-
-#name{
-width:90px;
-}
-
-#message{
-flex:1;
-}
-
-button{
-padding:12px;
-border:none;
-border-radius:8px;
-cursor:pointer;
-}
+body{margin:0;font-family:Arial;background:#0f172a;color:#fff}
+#join{display:flex;flex-direction:column;gap:10px;max-width:320px;margin:80px auto}
+input,button{padding:12px;border-radius:10px;border:none}
+button{cursor:pointer}
+#chatPage{display:none}
+header{padding:12px;text-align:center;background:#111827}
+#chat{height:70vh;overflow:auto;padding:10px}
+.msg{max-width:75%;padding:10px;border-radius:12px;margin:8px 0}
+.me{margin-left:auto;background:#2563eb}
+.other{background:#334155}
+.time{font-size:11px;opacity:.8;margin-top:4px}
+#bottom{display:flex;gap:8px;padding:10px}
+#message{flex:1}
 </style>
-
 </head>
 <body>
 
-<p> BROTHERs CHAT BOX </p>
-
-<div id="chat"></div>
-
-<div class="bottom">
-<input id="name" placeholder="Name">
-<input id="message" placeholder="Message">
-<button onclick="sendMsg()">Send</button>
+<div id="join">
+<h2>🔥 Lezz‑Fi Chat</h2>
+<input id="username" placeholder="Enter your name">
+<button onclick="joinChat()">Join Chat</button>
 </div>
 
-<script type="module">
+<div id="chatPage">
+<header><h2>🔥 Lezz‑Fi Chat v2.0</h2></header>
+<div id="chat"></div>
+<div id="bottom">
+<input id="message" placeholder="Type a message">
+<button onclick="sendLocal()">Send</button>
+</div>
+</div>
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import {
-getDatabase,
-ref,
-push,
-onChildAdded
-}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDN_rycfVW0HrqAlIIHfWVqumhAPQfetLs",
-  authDomain: "lezz-fi.firebaseapp.com",
-  databaseURL: "https://lezz-fi-default-rtdb.firebaseio.com",
-  projectId: "lezz-fi",
-  storageBucket: "lezz-fi.firebasestorage.app",
-  messagingSenderId: "156046703842",
-  appId: "1:156046703842:web:482610a2c1180dadffb2bb",
-  measurementId: "G-F62GEFZ0JV"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-window.sendMsg = function(){
-
-const name=document.getElementById("name").value;
-const message=document.getElementById("message").value;
-
-if(!name || !message) return;
-
-push(ref(db,"messages"),{
-name,
-message
-});
-
-document.getElementById("message").value="";
+<script>
+function joinChat(){
+ const n=document.getElementById('username').value.trim();
+ if(!n) return alert('Enter name');
+ localStorage.setItem('lezzfi_name',n);
+ document.getElementById('join').style.display='none';
+ document.getElementById('chatPage').style.display='block';
 }
 
-onChildAdded(ref(db,"messages"),(data)=>{
+if(localStorage.getItem('lezzfi_name')){
+ document.getElementById('join').style.display='none';
+ document.getElementById('chatPage').style.display='block';
+}
 
-const m=data.val();
-
-document.getElementById("chat").innerHTML +=
-`<div class="msg"><b>${m.name}</b><br>${m.message}</div>`;
-
-});
-
+function sendLocal(){
+ const box=document.getElementById('chat');
+ const txt=document.getElementById('message').value.trim();
+ if(!txt) return;
+ const div=document.createElement('div');
+ div.className='msg me';
+ const t=new Date().toLocaleTimeString();
+ div.innerHTML=txt+'<div class="time">'+t+'</div>';
+ box.appendChild(div);
+ document.getElementById('message').value='';
+ box.scrollTop=box.scrollHeight;
+}
 </script>
-
 </body>
 </html>
