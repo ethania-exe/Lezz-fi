@@ -151,10 +151,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-window.joinChat = function(){
+wwindow.joinChat = function(){
 
 const name =
 document.getElementById("username").value.trim();
+
+const avatar =
+document.getElementById("avatar").value;
 
 if(!name){
 alert("Enter your name");
@@ -162,6 +165,7 @@ return;
 }
 
 localStorage.setItem("lezzfi_name",name);
+localStorage.setItem("lezzfi_avatar",avatar);
 
 document.getElementById("join").style.display="none";
 document.getElementById("chatPage").style.display="block";
@@ -187,6 +191,7 @@ if(!message) return;
 
 push(ref(db,"messages"),{
 name:name,
+avatar:localStorage.getItem("lezzfi_avatar"),
 message:message,
 time:new Date().toLocaleTimeString()
 });
@@ -209,7 +214,7 @@ div.className =
 
 div.innerHTML =
 `
-<div class="name">${m.name}</div>
+<div style="font-size:24px">${m.avatar || "🙂"}</div>
 <div>${m.message}</div>
 <div class="time">${m.time}</div>
 `;
