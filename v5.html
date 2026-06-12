@@ -1,1 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lezz-Fi v5</title>
 
+<style>
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#0f172a;
+color:white;
+}
+
+.box{
+max-width:350px;
+margin:60px auto;
+display:flex;
+flex-direction:column;
+gap:10px;
+padding:20px;
+}
+
+input,select,button{
+padding:12px;
+border:none;
+border-radius:10px;
+}
+
+button{
+cursor:pointer;
+}
+
+#loginPage,#chatPage{
+display:none;
+}
+
+header{
+background:#111827;
+padding:15px;
+text-align:center;
+font-size:22px;
+font-weight:bold;
+}
+
+#chat{
+height:65vh;
+overflow:auto;
+padding:10px;
+}
+
+.msg{
+padding:10px;
+margin:8px 0;
+border-radius:12px;
+background:#334155;
+}
+</style>
+</head>
+<body>
+
+<div id="registerPage" class="box">
+<h2>🔥 Register</h2>
+
+<input id="regName" placeholder="Name">
+
+<input id="regUser" placeholder="Username">
+
+<input id="regPass" type="password" placeholder="Password">
+
+<select id="regAvatar">
+<option value="😎">😎 Cool</option>
+<option value="🙂">🙂 Smile</option>
+<option value="🤖">🤖 Robot</option>
+<option value="🐱">🐱 Cat</option>
+<option value="🦊">🦊 Fox</option>
+</select>
+
+<button onclick="registerUser()">Register</button>
+
+<button onclick="showLogin()">Go To Login</button>
+</div>
+
+<div id="loginPage" class="box">
+<h2>🔑 Login</h2>
+
+<input id="loginUser" placeholder="Username">
+
+<input id="loginPass" type="password" placeholder="Password">
+
+<button onclick="loginUser()">Login</button>
+
+<button onclick="showRegister()">Go To Register</button>
+</div>
+
+<div id="chatPage">
+
+<header>
+Lezz-Fi v5
+<button onclick="logout()" style="float:right;background:none;border:none;color:white;font-size:20px;">↩️</button>
+</header>
+
+<div id="chat"></div>
+
+<div style="display:flex;padding:10px;gap:8px;">
+<input id="message" placeholder="Type message..." style="flex:1;">
+<button onclick="sendMsg()">Send</button>
+</div>
+
+</div>
+
+<script>
+
+function showLogin(){
+document.getElementById("registerPage").style.display="none";
+document.getElementById("loginPage").style.display="flex";
+}
+
+function showRegister(){
+document.getElementById("loginPage").style.display="none";
+document.getElementById("registerPage").style.display="flex";
+}
+
+function registerUser(){
+
+const name=document.getElementById("regName").value.trim();
+const user=document.getElementById("regUser").value.trim();
+const pass=document.getElementById("regPass").value.trim();
+const avatar=document.getElementById("regAvatar").value;
+
+if(!name||!user||!pass){
+alert("Fill all fields");
+return;
+}
+
+if(localStorage.getItem("user_"+user)){
+alert("Username already exists");
+return;
+}
+
+const data={
+name,
+user,
+pass,
+avatar
+};
+
+localStorage.setItem(
+"user_"+user,
+JSON.stringify(data)
+);
+
+alert("Registered Successfully");
+
+showLogin();
+}
+
+function loginUser(){
+
+const user=document.getElementById("loginUser").value.trim();
+const pass=document.getElementById("loginPass").value.trim();
+
+const data=
+localStorage.getItem("user_"+user);
+
+if(!data){
+alert("User not found");
+return;
+}
+
+const u=JSON.parse(data);
+
+if(u.pass!==pass){
+alert("Wrong Password");
+return;
+}
+
+localStorage.setItem(
+"currentUser",
+JSON.stringify(u)
+);
+
+openChat();
+}
+
+function openChat(){
+
+document.getElementById("registerPage").style.display="none";
+document.getElementById("loginPage").style.display="none";
+document.getElementById("chatPage").style.display="block";
+}
+
+function sendMsg(){
+
+const txt=
+document.getElementById("message").value.trim();
+
+if(!txt) return;
+
+const user=
+JSON.parse(localStorage.getItem("currentUser"));
+
+const div=document.createElement("div");
+
+div.className="msg";
+
+div.innerHTML=
+user.avatar+
+" <b>"+user.name+"</b><br>"+txt;
+
+document.getElementById("chat")
+.appendChild(div);
+
+document.getElementById("message").value="";
+}
+
+function logout(){
+
+localStorage.removeItem("currentUser");
+
+location.reload();
+}
+
+const current=
+localStorage.getItem("currentUser");
+
+if(current){
+openChat();
+}
+
+</script>
+
+</body>
+</html>
