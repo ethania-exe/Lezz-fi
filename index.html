@@ -118,7 +118,12 @@ cursor:pointer;
 
 <div id="chatPage">
 <header>
+<button onclick="openAdmin()" style="float:left;background:none;border:none;color:white;font-size:22px;cursor:pointer;">
+👑
+</button>
+
 Lezz-Fi
+
 <button onclick="logout()" style="float:right;background:none;border:none;color:white;font-size:22px;cursor:pointer;">
 ↩️
 </button>
@@ -237,6 +242,19 @@ document.getElementById("chat")
 .scrollHeight;
 
 });
+  window.openAdmin = function(){
+
+const pass = prompt("Admin Password");
+
+if(pass === "AP162905"){
+alert("Admin Panel Opened");
+
+
+}else{
+alert("Wrong Password");
+}
+
+}
 window.logout = function(){
 
 localStorage.removeItem("lezzfi_name");
