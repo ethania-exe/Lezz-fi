@@ -109,7 +109,9 @@ cursor:pointer;
 <option value="SAIMON">SAIMON </option>
 <option value="NOYON">NOYON </option>
 <option value="SAHED">SAHED </option>
+  
 </select>
+  
 <button onclick="joinChat()">Join Chat</button>
 </div>
 
@@ -118,7 +120,6 @@ cursor:pointer;
 <button onclick="openAdmin()" style="float:left;background:none;border:none;color:white;font-size:22px;cursor:pointer;">
 ꑭ
 </button>
-
 
 <button onclick="logout()" style="float:right;background:none;border:none;color:white;font-size:22px;cursor:pointer;">
 →
@@ -178,19 +179,10 @@ const db = getDatabase(app);
 const dbRef = ref(db);
 window.joinChat = async function(){
 
-const name =
-document.getElementById("username").value.trim();
-
-const username =
-name.toLowerCase().replace(/\s+/g,'');
 
 const avatar =
 document.getElementById("avatar").value;
 
-if(!name){
-alert("Enter your name");
-return;
-}
 
 const snap =
 await get(child(dbRef,"users/"+username));
@@ -198,13 +190,8 @@ await get(child(dbRef,"users/"+username));
 if(!snap.exists()){
 
 await set(ref(db,"users/"+username),{
-name:name,
 avatar:avatar
 });
-
-}
-
-localStorage.setItem("lezzfi_name",name);
 localStorage.setItem("lezzfi_avatar",avatar);
 
 document.getElementById("join").style.display="none";
