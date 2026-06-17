@@ -106,12 +106,8 @@ cursor:pointer;
   
 <input id="username" placeholder="Enter your name">
 
-<select id="avatar">
-<option value="MAHIN">MAHIN </option>
-<option value="SAIMON">SAIMON </option>
-<option value="NOYON">NOYON </option>
-<option value="SAHED">SAHED </option>
-</select>
+<input id="photoUrl" placeholder="Profile Photo URL (Optional)">
+  
 <button onclick="joinChat()">Join Chat</button>
 </div>
 
@@ -185,8 +181,6 @@ document.getElementById("username").value.trim();
 const username =
 name.toLowerCase().replace(/\s+/g,'');
 
-const avatar =
-document.getElementById("avatar").value;
 
 if(!name){
 alert("Enter your name");
@@ -200,13 +194,11 @@ if(!snap.exists()){
 
 await set(ref(db,"users/"+username),{
 name:name,
-avatar:avatar
 });
 
 }
 
 localStorage.setItem("lezzfi_name",name);
-localStorage.setItem("lezzfi_avatar",avatar);
 
 document.getElementById("join").style.display="none";
 document.getElementById("chatPage").style.display="block";
@@ -233,7 +225,7 @@ if(!message) return;
 
 push(ref(db,"messages"),{
 name:name,
-avatar:localStorage.getItem("lezzfi_avatar"),
+photo:localStorage.getItem("lezzfi_photo"),
 message:message,
 time:new Date().toLocaleTimeString()
 });
@@ -256,11 +248,23 @@ div.className =
 
 div.innerHTML =
 `
-<div style="font-size:24px">${m.avatar || "🙂"}</div>
+<div style="display:flex;gap:8px;align-items:flex-start;">
+
+<img src="${m.photo || 'https://i.imgur.com/4M34hi2.png'}"
+style="
+width:40px;
+height:40px;
+border-radius:50%;
+object-fit:cover;
+">
+
+<div>
 <div>${m.message}</div>
 <div class="time">${m.time}</div>
-`;
+</div>
 
+</div>
+`;
 document.getElementById("chat")
 .appendChild(div);
 
@@ -306,7 +310,6 @@ location.reload();
 }
 
 }
-</script>
 </script>
 
 </body>
