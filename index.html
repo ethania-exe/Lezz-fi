@@ -161,6 +161,7 @@ push,
 set,
 get,
 child,
+remove,
 onChildAdded
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
@@ -294,6 +295,21 @@ localStorage.removeItem("lezzfi_avatar");
 location.reload();
 
 }
+
+window.clearAllChats = function(){
+
+if(confirm("Delete ALL chats?")){
+
+remove(ref(db,"messages"));
+
+alert("All Chats Deleted");
+
+location.reload();
+
+}
+
+}
+</script>
 </script>
 
 </body>
