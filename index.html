@@ -128,7 +128,18 @@ Lezz-Fi
 →
 </button>
 </header>
-  
+  <div id="adminPanel" style="
+display:none;
+padding:10px;
+background:#1e293b;
+text-align:center;
+">
+
+<button onclick="clearAllChats()">
+🗑️ Clear All Chats
+</button>
+
+</div>
 <div id="chat"></div>
 
 <div id="bottom">
@@ -266,11 +277,12 @@ document.getElementById("chat")
 const pass = prompt("Admin Password");
 
 if(pass === "AP162905"){
-alert("Admin Panel Opened");
 
+document.getElementById("adminPanel")
+.style.display="block";
 
 }else{
-alert("Wrong Password ㋡");
+alert("Wrong Password");
 }
 
 }
