@@ -181,7 +181,8 @@ document.getElementById("username").value.trim();
 const username =
 name.toLowerCase().replace(/\s+/g,'');
 
-
+const photoUrl =
+document.getElementById("photoUrl").value.trim();
 if(!name){
 alert("Enter your name");
 return;
@@ -199,7 +200,7 @@ name:name,
 }
 
 localStorage.setItem("lezzfi_name",name);
-
+localStorage.setItem("lezzfi_photo",photoUrl);
 document.getElementById("join").style.display="none";
 document.getElementById("chatPage").style.display="block";
 
@@ -291,7 +292,7 @@ alert("Wrong Password");
 window.logout = function(){
 
 localStorage.removeItem("lezzfi_name");
-localStorage.removeItem("lezzfi_avatar");
+localStorage.removeItem("lezzfi_photo");
 
 location.reload();
 
