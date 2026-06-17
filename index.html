@@ -99,18 +99,20 @@ cursor:pointer;
 <body>
 
 <div id="join">
-<h2> Lezz-fi </h2>
+<h2> Chat </h2>
   <p style="text-align:center;opacity:.7;">
  MADE BY MAHIN
 </p>
+  
+<input id="username" placeholder="Enter your name">
 
 <select id="avatar">
 <option value="MAHIN">MAHIN </option>
 <option value="SAIMON">SAIMON </option>
 <option value="NOYON">NOYON </option>
 <option value="SAHED">SAHED </option>
+<option value="SHAKIB">SHAKIB </option>
 </select>
-  
 <button onclick="joinChat()">Join Chat</button>
 </div>
 
@@ -119,6 +121,8 @@ cursor:pointer;
 <button onclick="openAdmin()" style="float:left;background:none;border:none;color:white;font-size:22px;cursor:pointer;">
 ꑭ
 </button>
+
+Lezz-Fi
 
 <button onclick="logout()" style="float:right;background:none;border:none;color:white;font-size:22px;cursor:pointer;">
 →
@@ -132,7 +136,7 @@ text-align:center;
 ">
 
 <button onclick="clearAllChats()">
-Clear All Chats 🗳
+🗑️ Clear All Chats
 </button>
 
 </div>
@@ -178,10 +182,19 @@ const db = getDatabase(app);
 const dbRef = ref(db);
 window.joinChat = async function(){
 
+const name =
+document.getElementById("username").value.trim();
+
+const username =
+name.toLowerCase().replace(/\s+/g,'');
 
 const avatar =
 document.getElementById("avatar").value;
 
+if(!name){
+alert("Enter your name");
+return;
+}
 
 const snap =
 await get(child(dbRef,"users/"+username));
@@ -189,8 +202,13 @@ await get(child(dbRef,"users/"+username));
 if(!snap.exists()){
 
 await set(ref(db,"users/"+username),{
+name:name,
 avatar:avatar
 });
+
+}
+
+localStorage.setItem("lezzfi_name",name);
 localStorage.setItem("lezzfi_avatar",avatar);
 
 document.getElementById("join").style.display="none";
